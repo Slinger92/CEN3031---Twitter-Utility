@@ -1,21 +1,29 @@
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 ;
 
 public class MainFrame extends JFrame {
-	private static final long serialVersionUID = -8026416994513756565L;
-	public static JPanel currentPanel;
+
+	private static JPanel currentPanel;
 
 	/**
 	 * Create the frame.
@@ -33,6 +41,9 @@ public class MainFrame extends JFrame {
 
 		JMenu mnConfigurableOptions = new JMenu("Configurable Options");
 		menuBar.add(mnConfigurableOptions);
+		
+		JMenu mnHelp = new JMenu("Help");
+		menuBar.add(mnHelp);
 
 		JMenuItem mntmApiSettings = new JMenuItem("API Settings");
 		mntmApiSettings.addMouseListener(new MouseAdapter() {
@@ -45,6 +56,41 @@ public class MainFrame extends JFrame {
 				repaint();
 			}
 		});
+		
+		JMenuItem mntmUserManual = new JMenuItem("User Manual");
+		mntmUserManual.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				getContentPane().removeAll(); // removes existing panel
+				revalidate();
+				try {
+					getContentPane().add(new UserManual()); // adds user manual panel
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				} 
+				revalidate();
+				repaint();
+			}
+		});
+		
+		JMenuItem mntmWebsiteLink = new JMenuItem("Go to Website");
+		mntmWebsiteLink.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{
+					String URL = "http://cen3031.caseybaer.com/";
+					java.awt.Desktop.getDesktop().browse(java.net.URI.create(URL));
+				}catch(Exception p){
+					JOptionPane.showMessageDialog(null, p.getMessage());
+				}
+			}
+		});
+		
+		mntmUserManual.setHorizontalAlignment(SwingConstants.LEFT);
+		mnHelp.add(mntmUserManual);
+		
+		mntmWebsiteLink.setHorizontalAlignment(SwingConstants.LEFT);
+		mnHelp.add(mntmWebsiteLink);
+		
 		mntmApiSettings.setHorizontalAlignment(SwingConstants.LEFT);
 		mnConfigurableOptions.add(mntmApiSettings);
 
